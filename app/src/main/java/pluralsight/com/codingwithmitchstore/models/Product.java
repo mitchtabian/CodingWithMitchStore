@@ -33,24 +33,12 @@ public class Product implements Parcelable{
         this.serial_number = product.serial_number;
     }
 
+
     protected Product(Parcel in) {
         title = in.readString();
         image = in.readInt();
         type = in.readString();
         serial_number = in.readInt();
-    }
-
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(title);
-        dest.writeInt(image);
-        dest.writeString(type);
-        dest.writeInt(serial_number);
-    }
-
-    @Override
-    public int describeContents() {
-        return 0;
     }
 
     public static final Creator<Product> CREATOR = new Creator<Product>() {
@@ -106,5 +94,16 @@ public class Product implements Parcelable{
     }
 
 
+    @Override
+    public int describeContents() {
+        return 0;
+    }
 
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(title);
+        parcel.writeInt(image);
+        parcel.writeString(type);
+        parcel.writeInt(serial_number);
+    }
 }
