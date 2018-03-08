@@ -12,11 +12,13 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.resources.Products;
+import pluralsight.com.codingwithmitchstore.util.CartManger;
 
 
 /**
@@ -25,7 +27,8 @@ import pluralsight.com.codingwithmitchstore.resources.Products;
 
 public class ViewProductActivity extends AppCompatActivity implements
         View.OnTouchListener,
-        GestureDetector.OnGestureListener{
+        GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener{
 
     private static final String TAG = "ViewProductActivity";
 
@@ -45,8 +48,10 @@ public class ViewProductActivity extends AppCompatActivity implements
         mProductContainer = findViewById(R.id.product_container);
         mTabLayout = findViewById(R.id.tab_layout);
 
+
         mProductContainer.setOnTouchListener(this);
         mGestureDetector = new GestureDetector(this, this);
+
 
         getIncomingIntent();
         initPagerAdapter();
@@ -74,6 +79,7 @@ public class ViewProductActivity extends AppCompatActivity implements
         mProductContainer.setAdapter(mPagerAdapter);
         mTabLayout.setupWithViewPager(mProductContainer, true);
     }
+
 
     /*
         OnTouch
@@ -133,7 +139,9 @@ public class ViewProductActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onScroll(MotionEvent motionEvent,
+                            MotionEvent motionEvent1,
+                            float v, float v1) {
         Log.d(TAG, "onScroll: called.");
         return false;
     }
@@ -145,8 +153,33 @@ public class ViewProductActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onFling(MotionEvent motionEvent,
+                           MotionEvent motionEvent1,
+                           float v, float v1) {
         Log.d(TAG, "onFling: called.");
+        return false;
+    }
+
+    /*
+        DoubleTap
+     */
+
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        Log.d(TAG, "onSingleTapConfirmed: called.");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        Log.d(TAG, "onDoubleTap: called.");
+
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        Log.d(TAG, "onDoubleTapEvent: called.");
         return false;
     }
 }
