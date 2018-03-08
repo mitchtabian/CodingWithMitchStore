@@ -28,7 +28,8 @@ import pluralsight.com.codingwithmitchstore.util.CartManger;
 public class ViewProductActivity extends AppCompatActivity implements
         View.OnClickListener,
         View.OnTouchListener,
-        GestureDetector.OnGestureListener{
+        GestureDetector.OnGestureListener,
+        GestureDetector.OnDoubleTapListener{
 
     private static final String TAG = "ViewProductActivity";
 
@@ -164,7 +165,9 @@ public class ViewProductActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onScroll(MotionEvent motionEvent,
+                            MotionEvent motionEvent1,
+                            float v, float v1) {
         Log.d(TAG, "onScroll: called.");
         return false;
     }
@@ -176,12 +179,35 @@ public class ViewProductActivity extends AppCompatActivity implements
     }
 
     @Override
-    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+    public boolean onFling(MotionEvent motionEvent,
+                           MotionEvent motionEvent1,
+                           float v, float v1) {
         Log.d(TAG, "onFling: called.");
         return false;
     }
 
+    /*
+        DoubleTap
+     */
 
+    @Override
+    public boolean onSingleTapConfirmed(MotionEvent motionEvent) {
+        Log.d(TAG, "onSingleTapConfirmed: called.");
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTap(MotionEvent motionEvent) {
+        Log.d(TAG, "onDoubleTap: called.");
+
+        return false;
+    }
+
+    @Override
+    public boolean onDoubleTapEvent(MotionEvent motionEvent) {
+        Log.d(TAG, "onDoubleTapEvent: called.");
+        return false;
+    }
 }
 
 
