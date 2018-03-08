@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">GesturesTEST</string>
+    <string name="app_name">CodingWithMitchStore</string>
 
     <!-- fragment tags -->
     <string name="fragment_image">Image Fragment</string>
