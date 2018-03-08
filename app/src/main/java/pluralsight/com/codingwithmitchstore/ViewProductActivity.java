@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pluralsight.com.codingwithmitchstore.customviews.MyDragShadowBuilder;
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.resources.Products;
 import pluralsight.com.codingwithmitchstore.util.CartManger;
@@ -210,6 +211,18 @@ public class ViewProductActivity extends AppCompatActivity implements
     @Override
     public void onLongPress(MotionEvent motionEvent) {
         Log.d(TAG, "onLongPress: called.");
+
+        ViewProductFragment fragment = ((ViewProductFragment)mPagerAdapter.getItem(mProductContainer.getCurrentItem()));
+        // Instantiates the drag shadow builder.
+        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(
+                ((ViewProductFragment)fragment).mImageView, fragment.mProduct.getImage());
+
+        // Starts the drag
+        ((ViewProductFragment)fragment).mImageView.startDrag(null,  // the data to be dragged
+                myShadow,  // the drag shadow builder
+                null,      // no need to use local data
+                0          // flags (not currently used, set to 0)
+        );
 
     }
 
