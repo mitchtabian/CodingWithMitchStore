@@ -102,9 +102,10 @@ public class ViewProductActivity extends AppCompatActivity implements
         display.getSize(size);
         int width = size.x;
 
-        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.25));
+        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.18));
         mCartPositionRectangle.top = 0;
         mCartPositionRectangle.right = width;
+        mCartPositionRectangle.bottom = mCartPositionRectangle.bottom - Math.round((int)(width * 0.03));
     }
 
     private void setDragMode(boolean isDragging){
