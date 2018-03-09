@@ -34,7 +34,9 @@ public class ViewProductActivity extends AppCompatActivity implements
         View.OnTouchListener,
         View.OnClickListener,
         GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener{
+        GestureDetector.OnDoubleTapListener,
+        View.OnDragListener
+		{
 
     private static final String TAG = "ViewProductActivity";
 
@@ -102,9 +104,10 @@ public class ViewProductActivity extends AppCompatActivity implements
         display.getSize(size);
         int width = size.x;
 
-        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.25));
+        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.18));
         mCartPositionRectangle.top = 0;
         mCartPositionRectangle.right = width;
+        mCartPositionRectangle.bottom = mCartPositionRectangle.bottom - Math.round((int)(width * 0.03));
     }
 
     private void setDragMode(boolean isDragging){
@@ -224,6 +227,7 @@ public class ViewProductActivity extends AppCompatActivity implements
                 0          // flags (not currently used, set to 0)
         );
 
+		myShadow.getView().setOnDragListener(this);
     }
 
     @Override
@@ -257,6 +261,49 @@ public class ViewProductActivity extends AppCompatActivity implements
         return false;
     }
 
+	    /*
+        OnDragListener
+     */
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
+
+        switch(event.getAction()) {
+
+            case DragEvent.ACTION_DRAG_STARTED:
+                Log.d(TAG, "onDrag: drag started.");
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_ENTERED:
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_LOCATION:
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_EXITED:
+
+                return true;
+
+            case DragEvent.ACTION_DROP:
+
+                Log.d(TAG, "onDrag: dropped.");
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_ENDED:
+                Log.d(TAG, "onDrag: ended.");
+
+                return true;
+
+            // An unknown action type was received.
+            default:
+                Log.e(TAG,"Unknown action type received by OnStartDragListener.");
+                break;
+        }
+        return false;
+    }
 }
 
 
