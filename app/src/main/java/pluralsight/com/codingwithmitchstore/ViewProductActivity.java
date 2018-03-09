@@ -3,6 +3,8 @@ package pluralsight.com.codingwithmitchstore;
 import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.Rect;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
@@ -11,6 +13,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Display;
+import android.view.DragEvent;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,6 +23,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import pluralsight.com.codingwithmitchstore.customviews.MyDragShadowBuilder;
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.resources.Products;
 import pluralsight.com.codingwithmitchstore.util.CartManger;
@@ -33,7 +37,8 @@ public class ViewProductActivity extends AppCompatActivity implements
         View.OnTouchListener,
         View.OnClickListener,
         GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener{
+        GestureDetector.OnDoubleTapListener,
+        View.OnDragListener{
 
     private static final String TAG = "ViewProductActivity";
 
@@ -101,9 +106,10 @@ public class ViewProductActivity extends AppCompatActivity implements
         display.getSize(size);
         int width = size.x;
 
-        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.25));
+        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.18));
         mCartPositionRectangle.top = 0;
         mCartPositionRectangle.right = width;
+        mCartPositionRectangle.bottom = mCartPositionRectangle.bottom - Math.round((int)(width * 0.03));
     }
 
     private void setDragMode(boolean isDragging){
@@ -148,6 +154,8 @@ public class ViewProductActivity extends AppCompatActivity implements
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        getCartPosition();
 
         if(view.getId() == R.id.product_container){
             mGestureDetector.onTouchEvent(motionEvent);
@@ -211,6 +219,19 @@ public class ViewProductActivity extends AppCompatActivity implements
     public void onLongPress(MotionEvent motionEvent) {
         Log.d(TAG, "onLongPress: called.");
 
+        ViewProductFragment fragment = ((ViewProductFragment)mPagerAdapter.getItem(mProductContainer.getCurrentItem()));
+        // Instantiates the drag shadow builder.
+        View.DragShadowBuilder myShadow = new MyDragShadowBuilder(
+                ((ViewProductFragment)fragment).mImageView, fragment.mProduct.getImage());
+
+        // Starts the drag
+        ((ViewProductFragment)fragment).mImageView.startDrag(null,  // the data to be dragged
+                myShadow,  // the drag shadow builder
+                null,      // no need to use local data
+                0          // flags (not currently used, set to 0)
+        );
+
+        myShadow.getView().setOnDragListener(this);
     }
 
     @Override
@@ -244,6 +265,70 @@ public class ViewProductActivity extends AppCompatActivity implements
         return false;
     }
 
+    /*
+        OnDragListener
+     */
+    @Override
+    public boolean onDrag(View view, DragEvent event) {
+
+        switch(event.getAction()) {
+
+            case DragEvent.ACTION_DRAG_STARTED:
+                Log.d(TAG, "onDrag: drag started.");
+
+                setDragMode(true);
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_ENTERED:
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_LOCATION:
+
+                Point currentPoint = new Point(Math.round(event.getX()), Math.round(event.getY()));
+//                Log.d(TAG, "onDrag: x: " + currentPoint.x + ", y: " + currentPoint.y );
+
+                if(mCartPositionRectangle.contains(currentPoint.x, currentPoint.y)){
+                    mCart.setBackgroundColor(this.getResources().getColor(R.color.blue2));
+                }
+                else{
+                    mCart.setBackgroundColor(this.getResources().getColor(R.color.blue1));
+                }
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_EXITED:
+
+                return true;
+
+            case DragEvent.ACTION_DROP:
+
+                Log.d(TAG, "onDrag: dropped.");
+
+                return true;
+
+            case DragEvent.ACTION_DRAG_ENDED:
+                Log.d(TAG, "onDrag: ended.");
+
+                Drawable background = mCart.getBackground();
+                if (background instanceof ColorDrawable) {
+                    if (((ColorDrawable) background).getColor() == getResources().getColor(R.color.blue2)) {
+                        addCurrentItemToCart();
+                    }
+                }
+                mCart.setBackground(this.getResources().getDrawable(R.drawable.blue_onclick_dark));
+                setDragMode(false);
+                return true;
+
+            // An unknown action type was received.
+            default:
+                Log.e(TAG,"Unknown action type received by OnStartDragListener.");
+                break;
+
+        }
+        return false;
+    }
 }
 
 
