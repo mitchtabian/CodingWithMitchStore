@@ -33,7 +33,8 @@ public class ViewProductActivity extends AppCompatActivity implements
         View.OnTouchListener,
         View.OnClickListener,
         GestureDetector.OnGestureListener,
-        GestureDetector.OnDoubleTapListener{
+        GestureDetector.OnDoubleTapListener
+        {
 
     private static final String TAG = "ViewProductActivity";
 
@@ -101,9 +102,10 @@ public class ViewProductActivity extends AppCompatActivity implements
         display.getSize(size);
         int width = size.x;
 
-        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.25));
+        mCartPositionRectangle.left = mCartPositionRectangle.left - Math.round((int)(width * 0.18));
         mCartPositionRectangle.top = 0;
         mCartPositionRectangle.right = width;
+        mCartPositionRectangle.bottom = mCartPositionRectangle.bottom - Math.round((int)(width * 0.03));
     }
 
     private void setDragMode(boolean isDragging){
@@ -148,6 +150,7 @@ public class ViewProductActivity extends AppCompatActivity implements
 
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
 
         if(view.getId() == R.id.product_container){
             mGestureDetector.onTouchEvent(motionEvent);
@@ -210,7 +213,7 @@ public class ViewProductActivity extends AppCompatActivity implements
     @Override
     public void onLongPress(MotionEvent motionEvent) {
         Log.d(TAG, "onLongPress: called.");
-
+        
     }
 
     @Override
@@ -243,6 +246,7 @@ public class ViewProductActivity extends AppCompatActivity implements
         Log.d(TAG, "onDoubleTapEvent: called.");
         return false;
     }
+
 
 }
 
