@@ -32,6 +32,21 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
     Matrix mMatrix;
     float[] mMatrixValues;
 
+    // Image States
+    static final int NONE = 0;
+    static final int DRAG = 1;
+    static final int ZOOM = 2;
+    int mode = NONE;
+
+    // Scales
+    float mSaveScale = 1f;
+    float mMinScale = 1f;
+    float mMaxScale = 4f;
+
+    // view dimensions
+    float origWidth, origHeight;
+    int viewWidth, viewHeight;
+
 
     public ScalingImageView(Context context) {
         super(context);
@@ -56,8 +71,50 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
         setOnTouchListener(this);
     }
 
+    private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
+        @Override
+        public boolean onScaleBegin(ScaleGestureDetector detector) {
+            mode = ZOOM;
+            return true;
+        }
+
+        @Override
+        public boolean onScale(ScaleGestureDetector detector) {
+            Log.d(TAG, "onScale: "+ detector.getScaleFactor());
+            float mScaleFactor = detector.getScaleFactor();
+            float origScale = mSaveScale;
+            mSaveScale *= mScaleFactor;
+            if (mSaveScale > mMaxScale) {
+                mSaveScale = mMaxScale;
+                mScaleFactor = mMaxScale / origScale;
+            } else if (mSaveScale < mMinScale) {
+                mSaveScale = mMinScale;
+                mScaleFactor = mMinScale / origScale;
+            }
+
+            if (origWidth * mSaveScale <= viewWidth
+                    || origHeight * mSaveScale <= viewHeight){
+                mMatrix.postScale(mScaleFactor, mScaleFactor, viewWidth / 2,
+                        viewHeight / 2);
+            }
+
+            else{
+                mMatrix.postScale(mScaleFactor, mScaleFactor,
+                        detector.getFocusX(), detector.getFocusY());
+            }
+
+
+            return true;
+        }
+    }
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
+
+        mScaleDetector.onTouchEvent(motionEvent);
+        mGestureDetector.onTouchEvent(motionEvent);
+
+
         return false;
     }
 
