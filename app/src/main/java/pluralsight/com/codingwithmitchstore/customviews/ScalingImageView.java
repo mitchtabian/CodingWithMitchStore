@@ -108,6 +108,56 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
         }
     }
 
+
+    public void fitToScreen(){
+        mSaveScale = 1;
+
+        float scale;
+        Drawable drawable = getDrawable();
+        if (drawable == null || drawable.getIntrinsicWidth() == 0
+                || drawable.getIntrinsicHeight() == 0)
+            return;
+        int bmWidth = drawable.getIntrinsicWidth();
+        int bmHeight = drawable.getIntrinsicHeight();
+
+        Log.d(TAG, "bmWidth: " + bmWidth + " bmHeight : " + bmHeight);
+
+        float scaleX = (float) viewWidth / (float) bmWidth;
+        float scaleY = (float) viewHeight / (float) bmHeight;
+        scale = Math.min(scaleX, scaleY);
+        mMatrix.setScale(scale, scale);
+
+        // Center the image
+        float redundantYSpace = (float) viewHeight
+                - (scale * (float) bmHeight);
+        float redundantXSpace = (float) viewWidth
+                - (scale * (float) bmWidth);
+        redundantYSpace /= (float) 2;
+        redundantXSpace /= (float) 2;
+        Log.d(TAG, "fitToScreen: redundantXSpace: " + redundantXSpace);
+        Log.d(TAG, "fitToScreen: redundantYSpace: " + redundantYSpace);
+
+        mMatrix.postTranslate(redundantXSpace, redundantYSpace);
+
+        origWidth = viewWidth - 2 * redundantXSpace;
+        origHeight = viewHeight - 2 * redundantYSpace;
+        setImageMatrix(mMatrix);
+    }
+
+    @Override
+    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+        super.onMeasure(widthMeasureSpec, heightMeasureSpec);
+        viewWidth = MeasureSpec.getSize(widthMeasureSpec);
+        viewHeight = MeasureSpec.getSize(heightMeasureSpec);
+
+        if (mSaveScale == 1) {
+
+            // Fit to screen.
+            fitToScreen();
+        }
+    }
+
+
     @Override
     public boolean onTouch(View view, MotionEvent motionEvent) {
 
