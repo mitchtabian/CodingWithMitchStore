@@ -47,6 +47,9 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
     float origWidth, origHeight;
     int viewWidth, viewHeight;
 
+    PointF mLast = new PointF();
+    PointF mStart = new PointF();
+
 
     public ScalingImageView(Context context) {
         super(context);
@@ -144,6 +147,14 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
         setImageMatrix(mMatrix);
     }
 
+    float getFixDragTrans(float delta, float viewSize, float contentSize) {
+        if (contentSize <= viewSize) {
+            return 0;
+        }
+        return delta;
+    }
+
+
     @Override
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
@@ -159,11 +170,39 @@ public class ScalingImageView extends android.support.v7.widget.AppCompatImageVi
 
 
     @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
+    public boolean onTouch(View view, MotionEvent event) {
 
-        mScaleDetector.onTouchEvent(motionEvent);
-        mGestureDetector.onTouchEvent(motionEvent);
+        mScaleDetector.onTouchEvent(event);
+        mGestureDetector.onTouchEvent(event);
 
+        PointF curr = new PointF(event.getX(), event.getY());
+
+        switch (event.getAction()) {
+            case MotionEvent.ACTION_DOWN:
+                mLast.set(curr);
+                mStart.set(mLast);
+                mode = DRAG;
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+                if (mode == DRAG) {
+                    float dx = curr.x - mLast.x;
+                    float dy = curr.y - mLast.y;
+
+                    float fixTransX = getFixDragTrans(dx, viewWidth, origWidth * mSaveScale);
+                    float fixTransY = getFixDragTrans(dy, viewHeight, origHeight * mSaveScale);
+                    mMatrix.postTranslate(fixTransX, fixTransY);
+
+                    mLast.set(curr.x, curr.y);
+                }
+                break;
+
+            case MotionEvent.ACTION_POINTER_UP:
+                mode = NONE;
+                break;
+        }
+
+        setImageMatrix(mMatrix);
 
         return false;
     }
