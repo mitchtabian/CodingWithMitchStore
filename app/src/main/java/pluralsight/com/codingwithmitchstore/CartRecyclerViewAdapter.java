@@ -3,7 +3,6 @@ package pluralsight.com.codingwithmitchstore;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -24,7 +23,7 @@ import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.util.BigDecimalUtil;
 
 
-public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>  {
 
     private static final String TAG = "CartRecyclerViewAd";
 
