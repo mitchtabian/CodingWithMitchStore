@@ -64,6 +64,19 @@ public class ViewCartActivity extends AppCompatActivity {
         mRecyclerView.setAdapter(mAdapter);
 
     }
+	
+	private void setFABVisibility(boolean isVisible){
+        Animation animFadeOut = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_out);
+        Animation animFadeIn = AnimationUtils.loadAnimation(getApplicationContext(), android.R.anim.fade_in);
+        if(isVisible){
+            mFab.setAnimation(animFadeIn);
+            mFab.setVisibility(View.VISIBLE);
+        }
+        else{
+            mFab.setAnimation(animFadeOut);
+            mFab.setVisibility(View.INVISIBLE);
+        }
+    }
 
 }
 
