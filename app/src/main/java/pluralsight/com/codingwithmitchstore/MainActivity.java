@@ -12,11 +12,15 @@ import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.resources.Products;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements
+        View.OnClickListener,
+        SwipeRefreshLayout.OnRefreshListener
+{
 
     private static final String TAG = "MainActivity";
     private static final int NUM_COLUMNS = 2;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //widgets
     private RecyclerView mRecyclerView;
     private RelativeLayout mCart;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
 
 
     @Override
@@ -36,7 +41,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
         mRecyclerView = findViewById(R.id.recycler_view);
         mCart = findViewById(R.id.cart);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
 
+        mSwipeRefreshLayout.setOnRefreshListener(this);
         mCart.setOnClickListener(this);
 
         getProducts();
@@ -67,8 +74,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-}
+    @Override
+    public void onRefresh() {
+        Collections.shuffle(mProducts);
+        onItemsLoadComplete();
+    }
 
+    void onItemsLoadComplete() {
+        (mRecyclerView.getAdapter()).notifyDataSetChanged();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+}
 
 
 
