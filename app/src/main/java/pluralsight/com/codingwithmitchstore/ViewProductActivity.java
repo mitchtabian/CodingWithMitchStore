@@ -159,6 +159,8 @@ public class ViewProductActivity extends AppCompatActivity implements
         switch(view.getId()){
             case R.id.cart:{
                 //open Cart Activity
+                Intent intent = new Intent(this, ViewCartActivity.class);
+                startActivity(intent);
                 break;
             }
 
