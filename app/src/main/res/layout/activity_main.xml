@@ -58,8 +58,6 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical"
                 android:id="@+id/recycler_view">
-
-
             </android.support.v7.widget.RecyclerView>
 
         </android.support.v4.widget.SwipeRefreshLayout>

@@ -28,6 +28,9 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private static final String TAG = "CartRecyclerViewAd";
 
+    private static final int PRODUCT_TYPE = 1;
+    private static final int HEADER_TYPE = 2;
+
     //vars
     private ArrayList<Product> mProducts = new ArrayList<>();
     private Context mContext;
@@ -41,23 +44,43 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view;
-        view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.layout_cart_list_item, parent, false);
-        return new ViewHolder(view);
+        switch (viewType) {
+            case PRODUCT_TYPE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.layout_cart_list_item, parent, false);
+                return new ViewHolder(view);
+            case HEADER_TYPE:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.layout_cart_section_header, parent, false);
+                return new SectionHeaderViewHolder(view);
+            default:
+                view = LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.layout_cart_list_item, parent, false);
+                return new ViewHolder(view);
+        }
     }
 
     @Override
     public void onBindViewHolder(@NonNull final RecyclerView.ViewHolder holder, int position) {
-        RequestOptions requestOptions = new RequestOptions()
-                .placeholder(R.drawable.ic_launcher_background);
 
-        Glide.with(mContext)
-                .setDefaultRequestOptions(requestOptions)
-                .load(mProducts.get(position).getImage())
-                .into(((ViewHolder)holder).image);
+        int itemViewType = getItemViewType(position);
+        if (itemViewType == PRODUCT_TYPE) {
+            RequestOptions requestOptions = new RequestOptions()
+                    .placeholder(R.drawable.ic_launcher_background);
 
-        ((ViewHolder)holder).title.setText(mProducts.get(position).getTitle());
-        ((ViewHolder)holder).price.setText(BigDecimalUtil.getValue(mProducts.get(position).getPrice()));
+            Glide.with(mContext)
+                    .setDefaultRequestOptions(requestOptions)
+                    .load(mProducts.get(position).getImage())
+                    .into(((ViewHolder)holder).image);
+
+            ((ViewHolder)holder).title.setText(mProducts.get(position).getTitle());
+            ((ViewHolder)holder).price.setText(BigDecimalUtil.getValue(mProducts.get(position).getPrice()));
+        }
+        else{
+            SectionHeaderViewHolder headerViewHolder = (SectionHeaderViewHolder) holder;
+            headerViewHolder.sectionTitle.setText(mProducts.get(position).getTitle());
+        }
+
 
     }
 
@@ -66,6 +89,15 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         return mProducts.size();
     }
 
+    @Override
+    public int getItemViewType(int position) {
+        if(TextUtils.isEmpty(mProducts.get(position).getType())){
+            return HEADER_TYPE;
+        }
+        else{
+            return PRODUCT_TYPE;
+        }
+    }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
@@ -82,6 +114,15 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         }
     }
 
+    public class SectionHeaderViewHolder extends RecyclerView.ViewHolder {
+
+        TextView sectionTitle;
+
+        public SectionHeaderViewHolder(View itemView) {
+            super(itemView);
+            sectionTitle = itemView.findViewById(R.id.cart_section_header);
+        }
+    }
 }
 
 

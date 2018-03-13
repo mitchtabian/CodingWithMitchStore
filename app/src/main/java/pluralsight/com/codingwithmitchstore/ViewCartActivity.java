@@ -21,6 +21,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import pluralsight.com.codingwithmitchstore.models.Product;
+import pluralsight.com.codingwithmitchstore.resources.ProductHeaders;
 import pluralsight.com.codingwithmitchstore.util.CartManger;
 
 
@@ -56,8 +57,13 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private void getProducts(){
+        //add the headers
+        mProducts.add(new Product(ProductHeaders.HEADER_TITLES[0], 0, "", new BigDecimal(0), 0));
+        mProducts.add(new Product(ProductHeaders.HEADER_TITLES[1], 0, "", new BigDecimal(0), 0));
+        mProducts.add(new Product(ProductHeaders.HEADER_TITLES[2], 0, "", new BigDecimal(0), 0));
+
         CartManger cartManger = new CartManger(this);
-        mProducts = cartManger.getCartItems();
+        mProducts.addAll(cartManger.getCartItems());
     }
 
     private void initRecyclerView(){
