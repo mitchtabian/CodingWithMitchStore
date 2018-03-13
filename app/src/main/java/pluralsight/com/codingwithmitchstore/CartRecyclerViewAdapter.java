@@ -21,10 +21,12 @@ import com.bumptech.glide.request.RequestOptions;
 import java.util.ArrayList;
 
 import pluralsight.com.codingwithmitchstore.models.Product;
+import pluralsight.com.codingwithmitchstore.touchhelpers.ItemTouchHelperAdapter;
 import pluralsight.com.codingwithmitchstore.util.BigDecimalUtil;
 
 
-public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
+        ItemTouchHelperAdapter {
 
     private static final String TAG = "CartRecyclerViewAd";
 
@@ -97,6 +99,16 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
         else{
             return PRODUCT_TYPE;
         }
+    }
+
+    @Override
+    public void onItemMove(int fromPosition, int toPosition) {
+        
+    }
+
+    @Override
+    public void onItemSwiped(int position) {
+
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
