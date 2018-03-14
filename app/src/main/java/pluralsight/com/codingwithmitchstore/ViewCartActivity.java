@@ -42,7 +42,7 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
     //vars
     CartRecyclerViewAdapter mAdapter;
     private ArrayList<Product> mProducts = new ArrayList<>();
-
+    private boolean mIsScrolling;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -111,6 +111,14 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
         return mRecyclerView.computeVerticalScrollRange() > mRecyclerView.getHeight();
     }
 
+    public void setIsScrolling(boolean isScrolling){
+        mIsScrolling = isScrolling;
+    }
+
+    public boolean isScrolling(){
+        return mIsScrolling;
+    }
+
     @Override
     public void onClick(View view) {
 
@@ -133,6 +141,7 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
             if (newState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                 Log.d(TAG, "onScrollStateChanged: touched.");
             }
+            setIsScrolling(true);
         }
 
         @Override
@@ -147,6 +156,7 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
                     setFABVisibility(false);
                 }
             }
+            setIsScrolling(true);
         }
     }
 

@@ -23,10 +23,13 @@ import java.util.ArrayList;
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.touchhelpers.ItemTouchHelperAdapter;
 import pluralsight.com.codingwithmitchstore.util.BigDecimalUtil;
+import pluralsight.com.codingwithmitchstore.util.CartManger;
 
 
 public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements
-        ItemTouchHelperAdapter {
+        ItemTouchHelperAdapter,
+        GestureDetector.OnGestureListener
+{
 
     private static final String TAG = "CartRecyclerViewAd";
 
@@ -37,11 +40,15 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     private ArrayList<Product> mProducts = new ArrayList<>();
     private Context mContext;
     private ItemTouchHelper mTouchHelper;
+    private GestureDetector mGestureDetector;
+    private ViewHolder mSelectedHolder;
+
 
 
     public CartRecyclerViewAdapter(Context context, ArrayList<Product> products) {
         mContext = context;
         mProducts = products;
+        mGestureDetector = new GestureDetector(mContext, this);
     }
 
     @Override
@@ -78,6 +85,21 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
             ((ViewHolder)holder).title.setText(mProducts.get(position).getTitle());
             ((ViewHolder)holder).price.setText(BigDecimalUtil.getValue(mProducts.get(position).getPrice()));
+
+            ((ViewHolder)holder).parentView.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    ((ViewCartActivity)mContext).setIsScrolling(false);
+
+                    if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                        mSelectedHolder = ((ViewHolder)holder);
+                        mGestureDetector.onTouchEvent(event);
+                    }
+
+                    return true;
+                }
+            });
         }
         else{
             SectionHeaderViewHolder headerViewHolder = (SectionHeaderViewHolder) holder;
@@ -104,7 +126,11 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-
+        Product fromProduct = mProducts.get(fromPosition);
+        Product product = new Product(fromProduct);
+        mProducts.remove(fromPosition);
+        mProducts.add(toPosition, product);
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     @Override
@@ -115,6 +141,39 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setTouchHelper(ItemTouchHelper touchHelper) {
 
         mTouchHelper = touchHelper;
+    }
+
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+        if(!((ViewCartActivity)mContext).isScrolling()){
+            mTouchHelper.startDrag(mSelectedHolder);
+        }
+    }
+
+    @Override
+    public boolean onFling(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
