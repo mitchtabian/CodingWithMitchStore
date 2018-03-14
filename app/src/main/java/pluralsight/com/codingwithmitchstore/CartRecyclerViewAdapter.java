@@ -36,6 +36,7 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
     //vars
     private ArrayList<Product> mProducts = new ArrayList<>();
     private Context mContext;
+    private ItemTouchHelper mTouchHelper;
 
 
     public CartRecyclerViewAdapter(Context context, ArrayList<Product> products) {
@@ -103,12 +104,17 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onItemMove(int fromPosition, int toPosition) {
-        
+
     }
 
     @Override
     public void onItemSwiped(int position) {
 
+    }
+
+    public void setTouchHelper(ItemTouchHelper touchHelper) {
+
+        mTouchHelper = touchHelper;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

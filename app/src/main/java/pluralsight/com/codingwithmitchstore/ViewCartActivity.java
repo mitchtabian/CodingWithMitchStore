@@ -22,6 +22,7 @@ import java.util.ArrayList;
 
 import pluralsight.com.codingwithmitchstore.models.Product;
 import pluralsight.com.codingwithmitchstore.resources.ProductHeaders;
+import pluralsight.com.codingwithmitchstore.touchhelpers.CartItemTouchHelperCallback;
 import pluralsight.com.codingwithmitchstore.util.CartManger;
 
 
@@ -70,6 +71,12 @@ public class ViewCartActivity extends AppCompatActivity implements View.OnClickL
         mAdapter = new CartRecyclerViewAdapter(this, mProducts);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        ItemTouchHelper.Callback callback = new CartItemTouchHelperCallback(mAdapter);
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(callback);
+        mAdapter.setTouchHelper(itemTouchHelper);
+        itemTouchHelper.attachToRecyclerView(mRecyclerView);
+
         mRecyclerView.setAdapter(mAdapter);
 
         //wait for the recyclerview to finish loading the views
