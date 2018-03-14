@@ -135,7 +135,11 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onItemSwiped(int position) {
+        CartManger cartManger = new CartManger(mContext);
+        cartManger.removeItemFromCart(mProducts.get(position));
 
+        mProducts.remove(mProducts.get(position));
+        notifyItemRemoved(position);
     }
 
     public void setTouchHelper(ItemTouchHelper touchHelper) {
