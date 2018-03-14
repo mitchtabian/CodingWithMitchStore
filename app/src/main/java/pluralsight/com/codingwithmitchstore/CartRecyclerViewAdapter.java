@@ -135,7 +135,7 @@ public class CartRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     @Override
     public void onItemSwiped(int position) {
-
+        
     }
 
     public void setTouchHelper(ItemTouchHelper touchHelper) {
