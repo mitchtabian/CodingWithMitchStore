@@ -58,8 +58,8 @@ public class CartManger {
     public void removeItemFromCart(Product product){
         Set<String> cartItems = mSharedPreferences.getStringSet(CART_ITEMS, new HashSet<String>());
 
-        cartItems.remove(product);
-        mEditor.putStringSet(CART_ITEMS,cartItems);
+        cartItems.remove(String.valueOf(product.getSerial_number()));
+        mEditor.putStringSet(CART_ITEMS, cartItems);
         mEditor.commit();
     }
 }
