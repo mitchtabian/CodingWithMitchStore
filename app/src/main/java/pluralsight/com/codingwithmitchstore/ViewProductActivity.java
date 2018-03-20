@@ -130,6 +130,25 @@ public class ViewProductActivity extends AppCompatActivity implements
         Toast.makeText(this, "added to cart", Toast.LENGTH_SHORT).show();
     }
 
+	private void inflateFullScreenProductFragment(){
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        FullScreenProductFragment fragment = new FullScreenProductFragment();
+
+        Bundle bundle = new Bundle();
+        Product selectedProduct =((ViewProductFragment)mPagerAdapter.getItem(mProductContainer.getCurrentItem())).mProduct;
+        bundle.putParcelable(getString(R.string.intent_product), selectedProduct);
+        fragment.setArguments(bundle);
+
+        // Enter Transition for New Fragment
+        Fade enterFade = new Fade();
+        enterFade.setStartDelay(1);
+        enterFade.setDuration(300);
+        fragment.setEnterTransition(enterFade);
+
+        transaction.addToBackStack(getString(R.string.fragment_full_screen_product));
+        transaction.replace(R.id.full_screen_container, fragment, getString(R.string.fragment_full_screen_product));
+        transaction.commit();
+    }
 
     @Override
     public void onClick(View view) {
@@ -255,7 +274,7 @@ public class ViewProductActivity extends AppCompatActivity implements
     @Override
     public boolean onDoubleTap(MotionEvent motionEvent) {
         Log.d(TAG, "onDoubleTap: called.");
-
+		inflateFullScreenProductFragment();
         return false;
     }
 
